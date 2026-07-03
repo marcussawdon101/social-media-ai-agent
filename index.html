@@ -208,7 +208,7 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="systemInstruction">Social Media Assistant Description (Prompt Persona)</label>
-                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emojis.</textarea>
+                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emo[...]
                 </div>
                 <div class="form-group full-width">
                     <label for="topic">Topic / Title</label>
@@ -242,7 +242,7 @@
         </div>
         
         <h3>API Information</h3>
-        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides generous rate limits for development.</p>
+        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provide[...]
         
         <h4>Step-by-step guide</h4>
         <ol>
@@ -259,7 +259,7 @@
         </ul>
 
         <h3>App Password</h3>
-        <p>To generate an app password for your Gmail account, you must have 2-step verification turned on. Once enabled, you can create a unique, 16-digit password for a third-party app or device.</p>
+        <p>To generate an app password for your Gmail account, you must have 2-step verification turned on. Once enabled, you can create a unique, 16-digit password for a third-party app or device.</p[...]
         <ol>
             <li>Go to your <a href="https://myaccount.google.com/apppasswords" target="_blank">Google Account App Passwords</a> page.</li>
             <li>If prompted, sign in to your Google account.</li>
@@ -290,8 +290,8 @@
         const systemInstruction = document.getElementById('systemInstruction').value;
         const topic = document.getElementById('topic').value;
 
-        // Stable Gemini 1.5 Flash endpoint
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // Updated Gemini API endpoint using gemini-2.0-flash-exp model
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
 
         // Properly formatted payload schema for the Gemini API
         const payload = {
