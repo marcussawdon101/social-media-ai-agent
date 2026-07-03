@@ -217,7 +217,7 @@
 <div class="container">
     <header>
         <h1>AI Social Media Assistant</h1>
-        <button class="btn btn-secondary" onclick="toggleModal(true)">? API & Setup Info</button>
+        <button class="btn btn-secondary" onclick="openInfoModal()">? API & Setup Info</button>
     </header>
 
     <!-- Configuration & Input Form -->
@@ -242,7 +242,7 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="systemInstruction">Social Media Assistant Description (Prompt Persona)</label>
-                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emojis. Focus on creating content that is concise, impactful, and tailored to the specific audience.</textarea>
+                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emojis.</textarea>
                 </div>
                 <div class="form-group full-width">
                     <label for="topic">Topic / Title</label>
@@ -272,11 +272,11 @@
     <div class="modal-content">
         <div class="modal-header">
             <h2>API & Email Setup Information</h2>
-            <button class="close-modal" onclick="toggleModal(false)">&times;</button>
+            <button class="close-modal" onclick="closeInfoModal()">&times;</button>
         </div>
         
         <h3>🔑 Gemini API Key Setup</h3>
-        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides up to 60 requests per minute for testing and development.</p>
+        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides excellent access to state-of-the-art models.</p>
         
         <h4>Step-by-step guide:</h4>
         <ol>
@@ -329,22 +329,26 @@
     let generatedText = "";
     let generatedImageUrl = "";
 
-    // Toggle Info Modal View
-    function toggleModal(show) {
+    // Open Info Modal
+    function openInfoModal() {
         const modal = document.getElementById('infoModal');
-        if(modal) {
-            if(show) {
-                modal.classList.add('active');
-            } else {
-                modal.classList.remove('active');
-            }
+        if (modal) {
+            modal.classList.add('active');
+        }
+    }
+
+    // Close Info Modal
+    function closeInfoModal() {
+        const modal = document.getElementById('infoModal');
+        if (modal) {
+            modal.classList.remove('active');
         }
     }
 
     // Close modal when clicking outside of it
     window.onclick = function(event) {
         const modal = document.getElementById('infoModal');
-        if(event.target === modal) {
+        if (event.target === modal) {
             modal.classList.remove('active');
         }
     }
