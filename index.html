@@ -276,7 +276,7 @@
         </div>
         
         <h3>🔑 Gemini API Key Setup</h3>
-        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides generous access for development and testing.</p>
+        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides access to Gemini models at no cost.</p>
         
         <h4>Step-by-step guide:</h4>
         <ol>
@@ -290,7 +290,7 @@
         <ul>
             <li><strong>Rate limits:</strong> The free plan restricts how many requests you can make per minute (typically 60 requests/minute).</li>
             <li><strong>Data usage:</strong> Your prompt and response data may be reviewed by human reviewers and used to improve Google products.</li>
-            <li><strong>Model availability:</strong> You have access to the latest Gemini models including gemini-2.0-flash-exp.</li>
+            <li><strong>Model availability:</strong> You have access to Gemini models including gemini-1.5-flash and gemini-1.5-pro.</li>
         </ul>
 
         <h3>📧 Gmail App Password Setup</h3>
@@ -360,8 +360,8 @@
         const systemInstruction = document.getElementById('systemInstruction').value;
         const topic = document.getElementById('topic').value;
 
-        // Updated Gemini API endpoint using gemini-2.0-flash-exp model
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+        // Updated Gemini API endpoint using gemini-1.5-flash model (stable & free-tier)
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         // Properly formatted payload schema for the Gemini API
         const payload = {
