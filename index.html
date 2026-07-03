@@ -119,9 +119,14 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
         }
 
         .modal-content {
@@ -237,7 +242,7 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="systemInstruction">Social Media Assistant Description (Prompt Persona)</label>
-                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emojis. Make the content compelling, shareable, and tailored to the topic provided. Include industry-specific insights where relevant.</textarea>
+                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emojis.</textarea>
                 </div>
                 <div class="form-group full-width">
                     <label for="topic">Topic / Title</label>
@@ -271,7 +276,7 @@
         </div>
         
         <h3>🔑 Gemini API Key Setup</h3>
-        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides generous rate limits for personal projects.</p>
+        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides access to powerful models with rate limits.</p>
         
         <h4>Step-by-step guide:</h4>
         <ol>
@@ -327,14 +332,20 @@
     // Toggle Info Modal View
     function toggleModal(show) {
         const modal = document.getElementById('infoModal');
-        if(modal) modal.style.display = show ? 'flex' : 'none';
+        if(modal) {
+            if(show) {
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
+        }
     }
 
     // Close modal when clicking outside of it
     window.onclick = function(event) {
         const modal = document.getElementById('infoModal');
         if(event.target === modal) {
-            modal.style.display = 'none';
+            modal.classList.remove('active');
         }
     }
 
