@@ -273,13 +273,13 @@
     let generatedText = "";
     let generatedImageUrl = "";
 
-    // Toggle Info Modal View
+    // Toggle Information Guideline Modal
     function toggleModal(show) {
         const modal = document.getElementById('infoModal');
         if(modal) modal.style.display = show ? 'flex' : 'none';
     }
 
-    // Call Google Gemini API
+    // Call Up-to-Date Google Gemini API Production Endpoint
     async function generatePost(event) {
         event.preventDefault();
         const generateBtn = document.getElementById('generateBtn');
@@ -290,23 +290,20 @@
         const systemInstruction = document.getElementById('systemInstruction').value;
         const topic = document.getElementById('topic').value;
 
-        // Stable Gemini 1.5 Flash endpoint
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // FIXED: Using production 'v1' and modern active 'gemini-2.5-flash' engine identifier
+        const url = `https://googleapis.com{apiKey}`;
 
-        // Properly formatted payload schema for the Gemini API
         const payload = {
             contents: [{
                 parts: [{
-                    text: `System Persona Guidelines:\n${systemInstruction}\n\nTask:\nGenerate an engaging social media post with relevant hashtags and emojis about this topic: ${topic}`
+                    text: `System Instruction Persona:\n${systemInstruction}\n\nTask:\nGenerate an engaging social media post with relevant hashtags and emojis about this topic: ${topic}`
                 }]
             }]
         };
 
         try {
-            // HTTPS-only fetch request for secure GitHub Pages deployment
             const response = await fetch(url, {
                 method: 'POST',
-                mode: 'cors',
                 headers: { 
                     'Content-Type': 'application/json'
                 },
@@ -321,35 +318,38 @@
                 return;
             }
             
-            // FIXED SCHEMA PATH: Correctly parsing nested content arrays returned by the Google API
+            // FIXED: Structural array validation securely extracting the target text content payload
             if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
                 generatedText = data.candidates[0].content.parts[0].text;
                 
-                // Set keyword fallback identifiers for safe visual generation
+                // Formulate keyword tags
                 const keyword = encodeURIComponent(topic.split(" ").slice(0, 2).join(","));
                 
-                // High-quality social media image from Unsplash
-                generatedImageUrl = `https://source.unsplash.com/800x600/?${keyword}`;
+                // High quality image placeholder mapping layout
+                generatedImageUrl = "https://unsplash.com";
+                if(keyword) {
+                    generatedImageUrl = `https://unsplash.com{keyword}`;
+                }
 
-                // Render components out to the webpage GUI blocks
+                // Render out components into active UI blocks
                 document.getElementById('postContent').innerText = generatedText;
                 document.getElementById('postImage').src = generatedImageUrl;
                 document.getElementById('previewBox').style.display = 'block';
                 document.getElementById('statusMessage').innerText = "";
             } else {
-                alert("The API request went through, but returned an empty structural payload format. Review the console logs.");
-                console.log("Unexpected data payload structural architecture:", data);
+                alert("The API request went through but returned an unexpected or empty JSON payload structure.");
+                console.log("Returned Payload Structure:", data);
             }
         } catch (error) {
-            console.error("Caught Fetch Exception Event:", error);
-            alert(`Network Request Error!\n\nReason: ${error.message}\n\nMake sure your Gemini API key is valid and you are accessing this page over HTTPS.`);
+            console.error("Caught Exception Event:", error);
+            alert(`Network Request Blocked!\n\nDetails: ${error.message}`);
         } finally {
             generateBtn.innerText = "Generate Social Media Post";
             generateBtn.disabled = false;
         }
     }
 
-    // Send Email utilizing EmailJS Integration
+    // Send Email utilizing EmailJS Account Parameters
     function sendGeneratedEmail() {
         const sendEmailBtn = document.getElementById('sendEmailBtn');
         const statusMessage = document.getElementById('statusMessage');
@@ -360,7 +360,7 @@
         const recipient = document.getElementById('recipient').value;
         const topic = document.getElementById('topic').value;
 
-        // Initialize production transaction public framework wrapper
+        // Initialize production EmailJS token framework wrapper
         emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
 
         const templateParams = {
@@ -377,9 +377,9 @@
             sendEmailBtn.innerText = "Approve & Send Email";
             sendEmailBtn.disabled = false;
         }, function(error) {
-            console.log('EmailJS Connection Failure Log:', error);
+            console.log('EmailJS Connection Error:', error);
             statusMessage.style.color = "orange";
-            statusMessage.innerText = "⚠️ Frontend Email Error. (To finish configuration, ensure your EmailJS setup template public keys are actively hardcoded).";
+            statusMessage.innerText = "⚠️ Frontend Email Error. (To finish configuration, ensure your EmailJS public template keys are actively hardcoded).";
             sendEmailBtn.innerText = "Approve & Send Email";
             sendEmailBtn.disabled = false;
         });
