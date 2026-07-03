@@ -4,180 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Social Media Assistant</title>
-    <!-- EmailJS Library for sending emails from the browser -->
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- EmailJS Library for client-side transmission -->
     <script src="https://jsdelivr.net"></script>
-    <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg: #f9fafb;
-            --card-bg: #ffffff;
-            --text: #1f2937;
-            --border: #e5e7eb;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-secondary {
-            background-color: #6b7280;
-        }
-
-        .btn-secondary:hover {
-            background-color: #555b66;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 32px;
-            border-radius: 8px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* Preview Area */
-        .preview-box {
-            display: none;
-            background: #f3f4f6;
-            border: 1px dashed #9ca3af;
-            border-radius: 6px;
-            padding: 16px;
-            margin-top: 16px;
-        }
-
-        .preview-image {
-            max-width: 100%;
-            max-height: 350px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-top: 12px;
-            display: block;
-        }
-
-        .actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .status {
-            margin-top: 12px;
-            font-weight: 500;
-            font-size: 14px;
-        }
-    </style>
 </head>
 <body>
 
@@ -189,7 +19,7 @@
 
     <!-- Configuration & Input Form -->
     <div class="card">
-        <form id="assistantForm" onsubmit="generatePost(event)">
+        <form id="assistantForm">
             <div class="grid">
                 <div class="form-group">
                     <label for="apiKey">Gemini API Key</label>
@@ -223,12 +53,12 @@
     <!-- Output Preview Area -->
     <div class="card preview-box" id="previewBox">
         <h3>Generated Post Preview</h3>
-        <div id="postContent" style="white-space: pre-wrap; background: white; padding: 12px; border-radius: 6px; border: 1px solid var(--border);"></div>
+        <div id="postContent"></div>
         <img id="postImage" class="preview-image" src="" alt="Generated Content Image">
         
         <div class="actions">
-            <button class="btn" id="sendEmailBtn" onclick="sendGeneratedEmail()">Approve & Send Email</button>
-            <button class="btn btn-secondary" onclick="resetForm()">Discard</button>
+            <button class="btn" id="sendEmailBtn">Approve & Send Email</button>
+            <button class="btn btn-secondary" id="discardBtn">Discard</button>
         </div>
         <div id="statusMessage" class="status"></div>
     </div>
@@ -243,7 +73,7 @@
         </div>
         
         <h3>API Information</h3>
-        <p>You can get a free gemini api key to access google's ai models by signing up for <a href="https://a ://google.com" target="_blank">google ai studio</a>. The free tier provides generous rate limits for lightweight models (like gemini flash) without requiring a credit card, though your prompts may be used to train google's models.</p>
+        <p>You can get a free gemini api key to access google's ai models by signing up for <a href="https://google.com" target="_blank">google ai studio</a>. The free tier provides generous rate limits for lightweight models (like gemini flash) without requiring a credit card, though your prompts may be used to train google's models.</p>
         
         <h4>Step-by-step guide</h4>
         <ol>
@@ -270,133 +100,7 @@
     </div>
 </div>
 
-<script>
-    let generatedText = "";
-    let generatedImageUrl = "";
-
-    // Load saved settings if any exist
-    window.onload = function() {
-        if(localStorage.getItem("apiKey")) document.getElementById("apiKey").value = localStorage.getItem("apiKey");
-        if(localStorage.getItem("gmailUser")) document.getElementById("gmailUser").value = localStorage.getItem("gmailUser");
-        if(localStorage.getItem("appPassword")) document.getElementById("appPassword").value = localStorage.getItem("appPassword");
-        if(localStorage.getItem("recipient")) document.getElementById("recipient").value = localStorage.getItem("recipient");
-}
-function toggleModal(show) {
-const modal = document.getElementById('infoModal');
-if(modal) modal.style.display = show ? 'flex' : 'none';
-}
-async function generatePost(event) {
-event.preventDefault();
-const generateBtn = document.getElementById('generateBtn');
-generateBtn.innerText = "Generating post...";
-generateBtn.disabled = true;
-const apiKey = document.getElementById('apiKey').value.trim();
-const systemInstruction = document.getElementById('systemInstruction').value;
-const topic = document.getElementById('topic').value;
-// Persist information variables to avoid manual copying on refresh
-localStorage.setItem("apiKey", apiKey);
-localStorage.setItem("gmailUser", document.getElementById("gmailUser").value);
-localStorage.setItem("appPassword", document.getElementById("appPassword").value);
-localStorage.setItem("recipient", document.getElementById("recipient").value);
-// Core production direct target endpoint url
-const targetUrl = https://googleapis.com{apiKey};
-// CORS Bypass Strategy: Proxies target link explicitly via a public secure routing engine
-const proxyUrl = https://herokuapp.com;
-const payload = {
-contents: [{ parts: [{ text: System Persona:\n${systemInstruction}\n\nTask:\nGenerate a social media post with relevant hashtags and emojis about this topic: ${topic} }] }]
-};
-// Try direct call first, automatic fallback to secure proxy pipeline if blocked
-let apiResponse;
-try {
-apiResponse = await fetch(targetUrl, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(payload)
-});
-} catch (initialErr) {
-console.log("Direct Call Restricted. Re-routing payload via proxy layer...");
-try {
-apiResponse = await fetch(proxyUrl + targetUrl, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-'X-Requested-With': 'XMLHttpRequest'
-},
-body: JSON.stringify(payload)
-});
-} catch (proxyErr) {
-alert("Network Pipeline Error:\n\nTo allow GitHub Pages to send requests, please visit herokuapp.com and click the 'Request temporary access' button to unblock the client connection framework.");
-generateBtn.innerText = "Generate Social Media Post";
-generateBtn.disabled = false;
-return;
-}
-}
-try {
-const data = await apiResponse.json();
-if (!apiResponse.ok) {
-const errorMsg = data.error?.message || "Unknown API Error";
-alert(Google Gemini Server Error: ${errorMsg});
-return;
-}
-// Extraction traversal through production candidates array structure
-if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-generatedText = data.candidates[0].content.parts[0].text;
-const keyword = encodeURIComponent(topic.split(" ").slice(0, 2).join(","));
-generatedImageUrl = https://unsplash.com;
-if(keyword) {
-generatedImageUrl = https://unsplash.com{keyword};
-}
-document.getElementById('postContent').innerText = generatedText;
-document.getElementById('postImage').src = generatedImageUrl;
-document.getElementById('previewBox').style.display = 'block';
-document.getElementById('statusMessage').innerText = "";
-} else {
-alert("The API completed but returned an unexpected or blank data container structure.");
-}
-} catch (error) {
-console.error(error);
-alert(Execution Exception: ${error.message});
-} finally {
-generateBtn.innerText = "Generate Social Media Post";
-generateBtn.disabled = false;
-}
-}
-function sendGeneratedEmail() {
-const sendEmailBtn = document.getElementById('sendEmailBtn');
-const statusMessage = document.getElementById('statusMessage');
-sendEmailBtn.innerText = "Sending...";
-sendEmailBtn.disabled = true;
-const gmailUser = document.getElementById('gmailUser').value;
-const recipient = document.getElementById('recipient').value;
-const topic = document.getElementById('topic').value;
-emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
-const templateParams = {
-to_email: recipient,
-from_email: gmailUser,
-subject: Your Social Media Draft: ${topic},
-message: generatedText,
-image_url: generatedImageUrl
-};
-emailjs.send('default_service', 'YOUR_TEMPLATE_ID', templateParams).then(function(response) {
-statusMessage.style.color = "green";
-statusMessage.innerText = "? Email successfully delivered to " + recipient;
-sendEmailBtn.innerText = "Approve & Send Email";
-sendEmailBtn.disabled = false;
-}, function(error) {
-console.log('EmailJS Error Log:', error);
-statusMessage.style.color = "orange";
-statusMessage.innerText = "?? Configuration placeholder found. Please setup your public account template keys inside the script file variables to enable direct delivery.";
-sendEmailBtn.innerText = "Approve & Send Email";
-sendEmailBtn.disabled = false;
-});
-}
-function resetForm() {
-document.getElementById('previewBox').style.display = 'none';
-document.getElementById('topic').value = "";
-}
-
-</script>
-
-
+<!-- External JavaScript Architecture Link -->
+<script src="script.js"></script>
 </body>
 </html>
