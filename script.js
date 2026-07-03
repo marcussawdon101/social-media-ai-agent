@@ -9,6 +9,13 @@ window.onload = function() {
     if(localStorage.getItem("appPassword")) document.getElementById("appPassword").value = localStorage.getItem("appPassword");
     if(localStorage.getItem("recipient")) document.getElementById("recipient").value = localStorage.getItem("recipient");
 
+    // Modal Event Bindings (FIXES THE UNRESPONSIVE BUTTON)
+    const infoBtn = document.getElementById("infoBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    
+    if (infoBtn) infoBtn.addEventListener("click", () => toggleModal(true));
+    if (closeModalBtn) closeModalBtn.addEventListener("click", () => toggleModal(false));
+
     // Form Event bindings
     document.getElementById("assistantForm").addEventListener("submit", generatePost);
     document.getElementById("sendEmailBtn").addEventListener("click", sendGeneratedEmail);
@@ -18,7 +25,9 @@ window.onload = function() {
 // Toggle Setup Information Modal overlay
 function toggleModal(show) {
     const modal = document.getElementById('infoModal');
-    if(modal) modal.style.display = show ? 'flex' : 'none';
+    if(modal) {
+        modal.style.display = show ? 'flex' : 'none';
+    }
 }
 
 // Handle Google Gemini Content Generation Flow
@@ -121,7 +130,6 @@ function sendGeneratedEmail() {
     const recipient = document.getElementById('recipient').value;
     const topic = document.getElementById('topic').value;
 
-    // To finish complete mail automation delivery, change this layout parameter with your verified EmailJS dashboard production keys
     emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
 
     const templateParams = {
@@ -140,7 +148,7 @@ function sendGeneratedEmail() {
     }, function(error) {
         console.log('EmailJS Tracking Connection Block Error:', error);
         statusMessage.style.color = "orange";
-        statusMessage.innerText = "⚠️ Email composition data compiled. (To enable seamless real email processing pipelines, make sure your actual EmailJS profile tokens are active inside script.js code configurations).";
+        statusMessage.innerText = "⚠️ Email configuration incomplete. Update variables inside script.js to activate.";
         sendEmailBtn.innerText = "Approve & Send Email";
         sendEmailBtn.disabled = false;
     });
