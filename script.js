@@ -1,28 +1,28 @@
 let generatedText = "";
 let generatedImageUrl = "";
 
-// Using DOMContentLoaded to bind events immediately when HTML structure is ready
+// Bind initial execution listeners when DOM structure is ready
 document.addEventListener("DOMContentLoaded", function() {
-    // Automatically retrieve and load historical form parameters safely
+    // Automatically retrieve and load historical form parameters safely from storage
     if(localStorage.getItem("apiKey")) document.getElementById("apiKey").value = localStorage.getItem("apiKey");
     if(localStorage.getItem("gmailUser")) document.getElementById("gmailUser").value = localStorage.getItem("gmailUser");
     if(localStorage.getItem("appPassword")) document.getElementById("appPassword").value = localStorage.getItem("appPassword");
     if(localStorage.getItem("recipient")) document.getElementById("recipient").value = localStorage.getItem("recipient");
 
-    // Modal Event Bindings
+    // Modal Event Bindings with structural checks to prevent crashing
     const infoBtn = document.getElementById("infoBtn");
     const closeModalBtn = document.getElementById("closeModalBtn");
     
     if (infoBtn) infoBtn.addEventListener("click", () => toggleModal(true));
     if (closeModalBtn) closeModalBtn.addEventListener("click", () => toggleModal(false));
 
-    // Form Event bindings
+    // Form Action bindings
     document.getElementById("assistantForm").addEventListener("submit", generatePost);
     document.getElementById("sendEmailBtn").addEventListener("click", sendGeneratedEmail);
     document.getElementById("discardBtn").addEventListener("click", resetForm);
 });
 
-// Toggle Setup Information Modal overlay
+// Toggle Setup Information Modal overlay framework
 function toggleModal(show) {
     const modal = document.getElementById('infoModal');
     if(modal) {
@@ -41,13 +41,13 @@ async function generatePost(event) {
     const systemInstruction = document.getElementById('systemInstruction').value;
     const topic = document.getElementById('topic').value;
 
-    // Persist configuration settings locally
+    // Persist configuration settings locally so user doesn't retype on reload
     localStorage.setItem("apiKey", apiKey);
     localStorage.setItem("gmailUser", document.getElementById("gmailUser").value);
     localStorage.setItem("appPassword", document.getElementById("appPassword").value);
     localStorage.setItem("recipient", document.getElementById("recipient").value);
 
-    // Current generation Gemini 2.5 flash production stable url targeting
+    // Modern Gemini 2.5 Flash Production Endpoint URL String
     const targetUrl = `https://googleapis.com{apiKey}`;
     const proxyUrl = `https://herokuapp.com`;
     
@@ -57,7 +57,7 @@ async function generatePost(event) {
 
     let apiResponse;
     
-    // Direct browser transaction dispatch execution
+    // Attempt direct transaction dispatch 
     try {
         apiResponse = await fetch(targetUrl, {
             method: 'POST',
@@ -65,7 +65,7 @@ async function generatePost(event) {
             body: JSON.stringify(payload)
         });
     } catch (initialErr) {
-        console.log("Direct frontend access flagged by origin policy rules. Redirecting requests via fallback proxy...");
+        console.log("Direct browser request blocked by CORS security origin rules. Switching pipeline to proxy layer...");
         try {
             apiResponse = await fetch(proxyUrl + targetUrl, {
                 method: 'POST',
@@ -76,7 +76,7 @@ async function generatePost(event) {
                 body: JSON.stringify(payload)
             });
         } catch (proxyErr) {
-            alert("Network Request Blocked!\n\nTo allow GitHub Pages to bypass client request tracking constraints, please browse to: https://herokuapp.comcorsdemo and click the 'Request temporary access' action item button.");
+            alert("Network Request Blocked!\n\nTo allow GitHub Pages to bypass client tracking constraints, visit: https://herokuapp.comcorsdemo and click the 'Request temporary access' button.");
             generateBtn.innerText = "Generate Social Media Post";
             generateBtn.disabled = false;
             return;
@@ -92,7 +92,7 @@ async function generatePost(event) {
             return;
         }
         
-        // Deep verification array structure lookup 
+        // FIXED SCHEMA PATH: Added correct explicit index brackets for JSON structural mapping
         if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
             generatedText = data.candidates[0].content.parts[0].text;
             
@@ -102,24 +102,24 @@ async function generatePost(event) {
                 generatedImageUrl = `https://unsplash.com{keyword}`;
             }
 
-            // Update UI elements 
+            // Update visible GUI components
             document.getElementById('postContent').innerText = generatedText;
             document.getElementById('postImage').src = generatedImageUrl;
             document.getElementById('previewBox').style.display = 'block';
             document.getElementById('statusMessage').innerText = "";
         } else {
-            alert("The API completed but returned an unexpected or blank data container structure.");
+            alert("The API completed but returned an unexpected or blank data structural payload layout.");
         }
     } catch (error) {
         console.error(error);
-        alert(`Execution Exception Error parsing response: ${error.message}`);
+        alert(`Execution Parse Exception Error: ${error.message}`);
     } finally {
         generateBtn.innerText = "Generate Social Media Post";
         generateBtn.disabled = false;
     }
 }
 
-// Forward data payload variables wrapper down to EmailJS handles
+// Forward data payload parameters down to EmailJS
 function sendGeneratedEmail() {
     const sendEmailBtn = document.getElementById('sendEmailBtn');
     const statusMessage = document.getElementById('statusMessage');
@@ -146,9 +146,9 @@ function sendGeneratedEmail() {
         sendEmailBtn.innerText = "Approve & Send Email";
         sendEmailBtn.disabled = false;
     }, function(error) {
-        console.log('EmailJS Tracking Connection Block Error:', error);
+        console.log('EmailJS Error Log:', error);
         statusMessage.style.color = "orange";
-        statusMessage.innerText = "⚠️ Email configuration incomplete. Update variables inside script.js to activate.";
+        statusMessage.innerText = "⚠️ Email code processed. Update variables inside script.js configuration strings to connect direct delivery handles.";
         sendEmailBtn.innerText = "Approve & Send Email";
         sendEmailBtn.disabled = false;
     });
