@@ -102,7 +102,6 @@
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 14px;
-            font-family: inherit;
         }
 
         textarea {
@@ -112,21 +111,16 @@
 
         /* Modal Styles */
         .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
-            display: none;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-        }
-
-        .modal.active {
-            display: flex !important;
         }
 
         .modal-content {
@@ -146,20 +140,11 @@
             margin-bottom: 20px;
         }
 
-        .modal-header h2 {
-            margin: 0;
-        }
-
         .close-modal {
             background: none;
             border: none;
             font-size: 24px;
             cursor: pointer;
-            padding: 0;
-        }
-
-        .close-modal:hover {
-            color: #6b7280;
         }
 
         /* Preview Area */
@@ -191,25 +176,6 @@
             font-weight: 500;
             font-size: 14px;
         }
-
-        a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .code-block {
-            background: #f3f4f6;
-            padding: 12px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 13px;
-            overflow-x: auto;
-            margin: 10px 0;
-        }
     </style>
 </head>
 <body>
@@ -217,7 +183,7 @@
 <div class="container">
     <header>
         <h1>AI Social Media Assistant</h1>
-        <button class="btn btn-secondary" onclick="openInfoModal()">? API & Setup Info</button>
+        <button class="btn btn-secondary" onclick="toggleModal(true)">? API & Setup Info</button>
     </header>
 
     <!-- Configuration & Input Form -->
@@ -260,8 +226,8 @@
         <img id="postImage" class="preview-image" src="" alt="Generated Content Image">
         
         <div class="actions">
-            <button type="button" class="btn" id="sendEmailBtn" onclick="sendGeneratedEmail()">Approve & Send Email</button>
-            <button type="button" class="btn btn-secondary" onclick="resetForm()">Discard</button>
+            <button class="btn" id="sendEmailBtn" onclick="sendGeneratedEmail()">Approve & Send Email</button>
+            <button class="btn btn-secondary" onclick="resetForm()">Discard</button>
         </div>
         <div id="statusMessage" class="status"></div>
     </div>
@@ -272,56 +238,34 @@
     <div class="modal-content">
         <div class="modal-header">
             <h2>API & Email Setup Information</h2>
-            <button class="close-modal" onclick="closeInfoModal()">&times;</button>
+            <button class="close-modal" onclick="toggleModal(false)">&times;</button>
         </div>
         
-        <h3>🔑 Gemini API Key Setup</h3>
-        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides excellent access to state-of-the-art models.</p>
+        <h3>API Information</h3>
+        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides generous rate limits for development.</p>
         
-        <h4>Step-by-step guide:</h4>
+        <h4>Step-by-step guide</h4>
         <ol>
-            <li><strong>Sign in:</strong> Go to <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a> and log in with your Google account.</li>
+            <li><strong>Sign in:</strong> Go to Google AI Studio and log in with your Google account.</li>
             <li><strong>Accept terms:</strong> If it's your first time, agree to the terms of service.</li>
             <li><strong>Create the key:</strong> Click "Get API Key" in the left sidebar, then click "Create API Key".</li>
-            <li><strong>Copy and save:</strong> Copy the generated key and paste it into the "Gemini API Key" field above. Do not commit it to public repositories.</li>
+            <li><strong>Copy and save:</strong> Copy the generated key and store it securely. Do not commit it to public repositories.</li>
         </ol>
 
-        <h4>⚠️ Limitations of the free tier:</h4>
+        <h4>Limitations of the free tier</h4>
         <ul>
-            <li><strong>Rate limits:</strong> The free plan restricts how many requests you can make per minute (typically 60 requests/minute).</li>
+            <li><strong>Rate limits:</strong> The free plan restricts how many requests you can make per minute.</li>
             <li><strong>Data usage:</strong> Your prompt and response data may be reviewed by human reviewers and used to improve Google products.</li>
-            <li><strong>Model availability:</strong> You have access to Gemini models including gemini-1.5-flash and gemini-1.5-pro.</li>
         </ul>
 
-        <h3>📧 Gmail App Password Setup</h3>
+        <h3>App Password</h3>
         <p>To generate an app password for your Gmail account, you must have 2-step verification turned on. Once enabled, you can create a unique, 16-digit password for a third-party app or device.</p>
-        
-        <h4>Steps to create an App Password:</h4>
         <ol>
-            <li>Go to your <a href="https://myaccount.google.com/security" target="_blank">Google Account Security page</a>.</li>
-            <li>Enable <strong>2-Step Verification</strong> if not already enabled.</li>
-            <li>Once 2-Step Verification is on, go to <a href="https://myaccount.google.com/apppasswords" target="_blank">App Passwords</a>.</li>
-            <li>Select "Mail" and "Windows Computer" (or your device type).</li>
-            <li>Click "Generate". A 16-digit app password will appear on the screen.</li>
-            <li>Copy the password and paste it into the "Gmail App Password" field above (remove spaces).</li>
+            <li>Go to your <a href="https://myaccount.google.com/apppasswords" target="_blank">Google Account App Passwords</a> page.</li>
+            <li>If prompted, sign in to your Google account.</li>
+            <li>At the bottom of the page, click "Select app" and choose the app you are using, or select "Other" to type a custom name (e.g., "Social Media Assistant").</li>
+            <li>Click "Create". A 16-digit app password will appear on the screen. Copy it.</li>
         </ol>
-
-        <h3>📨 EmailJS Setup (Optional - for Email Sending)</h3>
-        <p>If you want to enable the "Send Email" functionality, you need to set up EmailJS:</p>
-        
-        <h4>Steps to configure EmailJS:</h4>
-        <ol>
-            <li>Sign up at <a href="https://www.emailjs.com/" target="_blank">EmailJS.com</a> for a free account.</li>
-            <li>Create a new email service (e.g., Gmail service).</li>
-            <li>Create an email template with variables: {{to_email}}, {{subject}}, {{message}}, {{image_url}}.</li>
-            <li>Copy your <strong>Public Key</strong> and <strong>Service ID</strong> and <strong>Template ID</strong>.</li>
-            <li>In the JavaScript code (in the sendGeneratedEmail function), replace:
-                <div class="code-block">emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");<br>emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)</div>
-            </li>
-        </ol>
-
-        <h3>✅ Testing Your Setup</h3>
-        <p>Once you've added your API keys above, try generating a post about any topic. If the "Generate Social Media Post" button works, your Gemini API key is configured correctly.</p>
     </div>
 </div>
 
@@ -329,28 +273,10 @@
     let generatedText = "";
     let generatedImageUrl = "";
 
-    // Open Info Modal
-    function openInfoModal() {
+    // Toggle Info Modal View
+    function toggleModal(show) {
         const modal = document.getElementById('infoModal');
-        if (modal) {
-            modal.classList.add('active');
-        }
-    }
-
-    // Close Info Modal
-    function closeInfoModal() {
-        const modal = document.getElementById('infoModal');
-        if (modal) {
-            modal.classList.remove('active');
-        }
-    }
-
-    // Close modal when clicking outside of it
-    window.onclick = function(event) {
-        const modal = document.getElementById('infoModal');
-        if (event.target === modal) {
-            modal.classList.remove('active');
-        }
+        if(modal) modal.style.display = show ? 'flex' : 'none';
     }
 
     // Call Google Gemini API
@@ -364,8 +290,8 @@
         const systemInstruction = document.getElementById('systemInstruction').value;
         const topic = document.getElementById('topic').value;
 
-        // Updated Gemini API endpoint using stable v1 API (not v1beta) with gemini-1.5-flash
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // Stable Gemini 1.5 Flash endpoint
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         // Properly formatted payload schema for the Gemini API
         const payload = {
@@ -392,7 +318,6 @@
             if (!response.ok) {
                 const errorMsg = data.error?.message || "Unknown API Error";
                 alert(`Google Gemini Server Error: ${errorMsg}`);
-                console.error("Full error response:", data);
                 return;
             }
             
@@ -436,7 +361,6 @@
         const topic = document.getElementById('topic').value;
 
         // Initialize production transaction public framework wrapper
-        // IMPORTANT: Replace "YOUR_EMAILJS_PUBLIC_KEY" with your actual EmailJS public key
         emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
 
         const templateParams = {
@@ -447,8 +371,7 @@
             image_url: generatedImageUrl
         };
 
-        // IMPORTANT: Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your actual EmailJS credentials
-        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams).then(function(response) {
+        emailjs.send('default_service', 'YOUR_TEMPLATE_ID', templateParams).then(function(response) {
             statusMessage.style.color = "green";
             statusMessage.innerText = "✅ Email successfully delivered to " + recipient;
             sendEmailBtn.innerText = "Approve & Send Email";
@@ -456,7 +379,7 @@
         }, function(error) {
             console.log('EmailJS Connection Failure Log:', error);
             statusMessage.style.color = "orange";
-            statusMessage.innerText = "⚠️ EmailJS not configured. Check the '? API & Setup Info' button for configuration steps.";
+            statusMessage.innerText = "⚠️ Frontend Email Error. (To finish configuration, ensure your EmailJS setup template public keys are actively hardcoded).";
             sendEmailBtn.innerText = "Approve & Send Email";
             sendEmailBtn.disabled = false;
         });
@@ -467,6 +390,7 @@
         document.getElementById('topic').value = "";
     }
 </script>
+
 
 </body>
 </html>
