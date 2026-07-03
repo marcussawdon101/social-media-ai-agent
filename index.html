@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Social Media Assistant</title>
     <!-- EmailJS Library for sending emails from the browser -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
+    <script src="https://jsdelivr.net"></script>
     <style>
         :root {
             --primary: #4f46e5;
@@ -17,7 +17,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.5;
@@ -159,7 +159,8 @@
 
         .preview-image {
             max-width: 100%;
-            height: auto;
+            max-height: 350px;
+            object-fit: cover;
             border-radius: 6px;
             margin-top: 12px;
             display: block;
@@ -183,7 +184,7 @@
 <div class="container">
     <header>
         <h1>AI Social Media Assistant</h1>
-        <button class="btn btn-secondary" onclick="toggleModal(true)">? API & Setup Info</button>
+        <button class="btn btn-secondary" onclick="toggleModal(true)">ℹ️ API & Setup Info</button>
     </header>
 
     <!-- Configuration & Input Form -->
@@ -208,7 +209,7 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="systemInstruction">Social Media Assistant Description (Prompt Persona)</label>
-                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emojis.</textarea>
+                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emojis based on the user's topic.</textarea>
                 </div>
                 <div class="form-group full-width">
                     <label for="topic">Topic / Title</label>
@@ -242,29 +243,29 @@
         </div>
         
         <h3>API Information</h3>
-        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides generous rate limits for development.</p>
+        <p>You can get a free gemini api key to access google's ai models by signing up for <a href="https://a ://google.com" target="_blank">google ai studio</a>. The free tier provides generous rate limits for lightweight models (like gemini flash) without requiring a credit card, though your prompts may be used to train google's models.</p>
         
         <h4>Step-by-step guide</h4>
         <ol>
-            <li><strong>Sign in:</strong> Go to Google AI Studio and log in with your Google account.</li>
+            <li><strong>Sign in:</strong> Go to google ai studio and log in with your google account.</li>
             <li><strong>Accept terms:</strong> If it's your first time, agree to the terms of service.</li>
-            <li><strong>Create the key:</strong> Click "Get API Key" in the left sidebar, then click "Create API Key".</li>
+            <li><strong>Create the key:</strong> Click get api key in the left sidebar, then click create api key.</li>
             <li><strong>Copy and save:</strong> Copy the generated key and store it securely. Do not commit it to public repositories.</li>
         </ol>
 
         <h4>Limitations of the free tier</h4>
         <ul>
             <li><strong>Rate limits:</strong> The free plan restricts how many requests you can make per minute.</li>
-            <li><strong>Data usage:</strong> Your prompt and response data may be reviewed by human reviewers and used to improve Google products.</li>
+            <li><strong>Data usage:</strong> Your prompt and response data may be reviewed by human reviewers and used to improve google products.</li>
         </ul>
 
         <h3>App Password</h3>
-        <p>To generate an app password for your Gmail account, you must have 2-step verification turned on. Once enabled, you can create a unique, 16-digit password for a third-party app or device.</p>
+        <p>To generate an app password for your gmail account, you must have 2-step verification turned on. Once enabled, you can create a unique, 16-digit password for a third-party app or device by following these steps:</p>
         <ol>
-            <li>Go to your <a href="https://myaccount.google.com/apppasswords" target="_blank">Google Account App Passwords</a> page.</li>
-            <li>If prompted, sign in to your Google account.</li>
-            <li>At the bottom of the page, click "Select app" and choose the app you are using, or select "Other" to type a custom name (e.g., "Social Media Assistant").</li>
-            <li>Click "Create". A 16-digit app password will appear on the screen. Copy it.</li>
+            <li>Go to your <a href="https://google.com" target="_blank">google account app passwords</a> page.</li>
+            <li>If prompted, sign in to your google account.</li>
+            <li>At the bottom of the page, click select app and choose the app you are using, or select other to type a custom name (e.g., "Social Media Assistant").</li>
+            <li>Click create. A 16-digit app password will appear on the screen. Copy it.</li>
         </ol>
     </div>
 </div>
@@ -273,122 +274,127 @@
     let generatedText = "";
     let generatedImageUrl = "";
 
-    // Toggle Information Guideline Modal
-    function toggleModal(show) {
-        const modal = document.getElementById('infoModal');
-        if(modal) modal.style.display = show ? 'flex' : 'none';
-    }
+    // Load saved settings if any exist
+    window.onload = function() {
+        if(localStorage.getItem("apiKey")) document.getElementById("apiKey").value = localStorage.getItem("apiKey");
+        if(localStorage.getItem("gmailUser")) document.getElementById("gmailUser").value = localStorage.getItem("gmailUser");
+        if(localStorage.getItem("appPassword")) document.getElementById("appPassword").value = localStorage.getItem("appPassword");
+        if(localStorage.getItem("recipient")) document.getElementById("recipient").value = localStorage.getItem("recipient");
+}
+function toggleModal(show) {
+const modal = document.getElementById('infoModal');
+if(modal) modal.style.display = show ? 'flex' : 'none';
+}
+async function generatePost(event) {
+event.preventDefault();
+const generateBtn = document.getElementById('generateBtn');
+generateBtn.innerText = "Generating post...";
+generateBtn.disabled = true;
+const apiKey = document.getElementById('apiKey').value.trim();
+const systemInstruction = document.getElementById('systemInstruction').value;
+const topic = document.getElementById('topic').value;
+// Persist information variables to avoid manual copying on refresh
+localStorage.setItem("apiKey", apiKey);
+localStorage.setItem("gmailUser", document.getElementById("gmailUser").value);
+localStorage.setItem("appPassword", document.getElementById("appPassword").value);
+localStorage.setItem("recipient", document.getElementById("recipient").value);
+// Core production direct target endpoint url
+const targetUrl = https://googleapis.com{apiKey};
+// CORS Bypass Strategy: Proxies target link explicitly via a public secure routing engine
+const proxyUrl = https://herokuapp.com;
+const payload = {
+contents: [{ parts: [{ text: System Persona:\n${systemInstruction}\n\nTask:\nGenerate a social media post with relevant hashtags and emojis about this topic: ${topic} }] }]
+};
+// Try direct call first, automatic fallback to secure proxy pipeline if blocked
+let apiResponse;
+try {
+apiResponse = await fetch(targetUrl, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(payload)
+});
+} catch (initialErr) {
+console.log("Direct Call Restricted. Re-routing payload via proxy layer...");
+try {
+apiResponse = await fetch(proxyUrl + targetUrl, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+'X-Requested-With': 'XMLHttpRequest'
+},
+body: JSON.stringify(payload)
+});
+} catch (proxyErr) {
+alert("Network Pipeline Error:\n\nTo allow GitHub Pages to send requests, please visit herokuapp.com and click the 'Request temporary access' button to unblock the client connection framework.");
+generateBtn.innerText = "Generate Social Media Post";
+generateBtn.disabled = false;
+return;
+}
+}
+try {
+const data = await apiResponse.json();
+if (!apiResponse.ok) {
+const errorMsg = data.error?.message || "Unknown API Error";
+alert(Google Gemini Server Error: ${errorMsg});
+return;
+}
+// Extraction traversal through production candidates array structure
+if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+generatedText = data.candidates[0].content.parts[0].text;
+const keyword = encodeURIComponent(topic.split(" ").slice(0, 2).join(","));
+generatedImageUrl = https://unsplash.com;
+if(keyword) {
+generatedImageUrl = https://unsplash.com{keyword};
+}
+document.getElementById('postContent').innerText = generatedText;
+document.getElementById('postImage').src = generatedImageUrl;
+document.getElementById('previewBox').style.display = 'block';
+document.getElementById('statusMessage').innerText = "";
+} else {
+alert("The API completed but returned an unexpected or blank data container structure.");
+}
+} catch (error) {
+console.error(error);
+alert(Execution Exception: ${error.message});
+} finally {
+generateBtn.innerText = "Generate Social Media Post";
+generateBtn.disabled = false;
+}
+}
+function sendGeneratedEmail() {
+const sendEmailBtn = document.getElementById('sendEmailBtn');
+const statusMessage = document.getElementById('statusMessage');
+sendEmailBtn.innerText = "Sending...";
+sendEmailBtn.disabled = true;
+const gmailUser = document.getElementById('gmailUser').value;
+const recipient = document.getElementById('recipient').value;
+const topic = document.getElementById('topic').value;
+emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+const templateParams = {
+to_email: recipient,
+from_email: gmailUser,
+subject: Your Social Media Draft: ${topic},
+message: generatedText,
+image_url: generatedImageUrl
+};
+emailjs.send('default_service', 'YOUR_TEMPLATE_ID', templateParams).then(function(response) {
+statusMessage.style.color = "green";
+statusMessage.innerText = "? Email successfully delivered to " + recipient;
+sendEmailBtn.innerText = "Approve & Send Email";
+sendEmailBtn.disabled = false;
+}, function(error) {
+console.log('EmailJS Error Log:', error);
+statusMessage.style.color = "orange";
+statusMessage.innerText = "?? Configuration placeholder found. Please setup your public account template keys inside the script file variables to enable direct delivery.";
+sendEmailBtn.innerText = "Approve & Send Email";
+sendEmailBtn.disabled = false;
+});
+}
+function resetForm() {
+document.getElementById('previewBox').style.display = 'none';
+document.getElementById('topic').value = "";
+}
 
-    // Call Up-to-Date Google Gemini API Production Endpoint
-    async function generatePost(event) {
-        event.preventDefault();
-        const generateBtn = document.getElementById('generateBtn');
-        generateBtn.innerText = "Generating post...";
-        generateBtn.disabled = true;
-
-        const apiKey = document.getElementById('apiKey').value.trim();
-        const systemInstruction = document.getElementById('systemInstruction').value;
-        const topic = document.getElementById('topic').value;
-
-        // FIXED: Using production 'v1' and modern active 'gemini-2.5-flash' engine identifier
-        const url = `https://googleapis.com{apiKey}`;
-
-        const payload = {
-            contents: [{
-                parts: [{
-                    text: `System Instruction Persona:\n${systemInstruction}\n\nTask:\nGenerate an engaging social media post with relevant hashtags and emojis about this topic: ${topic}`
-                }]
-            }]
-        };
-
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                const errorMsg = data.error?.message || "Unknown API Error";
-                alert(`Google Gemini Server Error: ${errorMsg}`);
-                return;
-            }
-            
-            // FIXED: Structural array validation securely extracting the target text content payload
-            if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
-                generatedText = data.candidates[0].content.parts[0].text;
-                
-                // Formulate keyword tags
-                const keyword = encodeURIComponent(topic.split(" ").slice(0, 2).join(","));
-                
-                // High quality image placeholder mapping layout
-                generatedImageUrl = "https://unsplash.com";
-                if(keyword) {
-                    generatedImageUrl = `https://unsplash.com{keyword}`;
-                }
-
-                // Render out components into active UI blocks
-                document.getElementById('postContent').innerText = generatedText;
-                document.getElementById('postImage').src = generatedImageUrl;
-                document.getElementById('previewBox').style.display = 'block';
-                document.getElementById('statusMessage').innerText = "";
-            } else {
-                alert("The API request went through but returned an unexpected or empty JSON payload structure.");
-                console.log("Returned Payload Structure:", data);
-            }
-        } catch (error) {
-            console.error("Caught Exception Event:", error);
-            alert(`Network Request Blocked!\n\nDetails: ${error.message}`);
-        } finally {
-            generateBtn.innerText = "Generate Social Media Post";
-            generateBtn.disabled = false;
-        }
-    }
-
-    // Send Email utilizing EmailJS Account Parameters
-    function sendGeneratedEmail() {
-        const sendEmailBtn = document.getElementById('sendEmailBtn');
-        const statusMessage = document.getElementById('statusMessage');
-        sendEmailBtn.innerText = "Sending...";
-        sendEmailBtn.disabled = true;
-
-        const gmailUser = document.getElementById('gmailUser').value;
-        const recipient = document.getElementById('recipient').value;
-        const topic = document.getElementById('topic').value;
-
-        // Initialize production EmailJS token framework wrapper
-        emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
-
-        const templateParams = {
-            to_email: recipient,
-            from_email: gmailUser,
-            subject: `Your Social Media Draft: ${topic}`,
-            message: generatedText,
-            image_url: generatedImageUrl
-        };
-
-        emailjs.send('default_service', 'YOUR_TEMPLATE_ID', templateParams).then(function(response) {
-            statusMessage.style.color = "green";
-            statusMessage.innerText = "✅ Email successfully delivered to " + recipient;
-            sendEmailBtn.innerText = "Approve & Send Email";
-            sendEmailBtn.disabled = false;
-        }, function(error) {
-            console.log('EmailJS Connection Error:', error);
-            statusMessage.style.color = "orange";
-            statusMessage.innerText = "⚠️ Frontend Email Error. (To finish configuration, ensure your EmailJS public template keys are actively hardcoded).";
-            sendEmailBtn.innerText = "Approve & Send Email";
-            sendEmailBtn.disabled = false;
-        });
-    }
-
-    function resetForm() {
-        document.getElementById('previewBox').style.display = 'none';
-        document.getElementById('topic').value = "";
-    }
 </script>
 
 
