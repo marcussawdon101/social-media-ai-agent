@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Social Media Assistant</title>
     <!-- EmailJS Library for sending emails from the browser -->
-    <script src="https://jsdelivr.net"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
     <style>
         :root {
             --primary: #4f46e5;
@@ -183,7 +183,7 @@
 <div class="container">
     <header>
         <h1>AI Social Media Assistant</h1>
-        <button class="btn btn-secondary" onclick="toggleModal(true)">?? API & Setup Info</button>
+        <button class="btn btn-secondary" onclick="toggleModal(true)">? API & Setup Info</button>
     </header>
 
     <!-- Configuration & Input Form -->
@@ -208,7 +208,7 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="systemInstruction">Social Media Assistant Description (Prompt Persona)</label>
-                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emojis based on the user's topic.</textarea>
+                    <textarea id="systemInstruction" required>You are an expert Social Media Assistant. Write engaging, creative, and highly optimized social media posts with relevant hashtags and emojis.</textarea>
                 </div>
                 <div class="form-group full-width">
                     <label for="topic">Topic / Title</label>
@@ -242,29 +242,29 @@
         </div>
         
         <h3>API Information</h3>
-        <p>You can get a free gemini api key to access google's ai models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">google ai studio</a>. The free tier provides generous rate limits for lightweight models (like gemini flash) without requiring a credit card, though your prompts may be used to train google's models.</p>
+        <p>You can get a free Gemini API key to access Google's AI models by signing up for <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>. The free tier provides generous rate limits for development.</p>
         
         <h4>Step-by-step guide</h4>
         <ol>
-            <li><strong>Sign in:</strong> Go to google ai studio and log in with your google account.</li>
+            <li><strong>Sign in:</strong> Go to Google AI Studio and log in with your Google account.</li>
             <li><strong>Accept terms:</strong> If it's your first time, agree to the terms of service.</li>
-            <li><strong>Create the key:</strong> Click get api key in the left sidebar, then click create api key.</li>
+            <li><strong>Create the key:</strong> Click "Get API Key" in the left sidebar, then click "Create API Key".</li>
             <li><strong>Copy and save:</strong> Copy the generated key and store it securely. Do not commit it to public repositories.</li>
         </ol>
 
         <h4>Limitations of the free tier</h4>
         <ul>
             <li><strong>Rate limits:</strong> The free plan restricts how many requests you can make per minute.</li>
-            <li><strong>Data usage:</strong> Your prompt and response data may be reviewed by human reviewers and used to improve google products.</li>
+            <li><strong>Data usage:</strong> Your prompt and response data may be reviewed by human reviewers and used to improve Google products.</li>
         </ul>
 
         <h3>App Password</h3>
-        <p>To generate an app password for your gmail account, you must have 2-step verification turned on. Once enabled, you can create a unique, 16-digit password for a third-party app or device by following these steps:</p>
+        <p>To generate an app password for your Gmail account, you must have 2-step verification turned on. Once enabled, you can create a unique, 16-digit password for a third-party app or device.</p>
         <ol>
-            <li>Go to your <a href="https://myaccount.google.com/apppasswords" target="_blank">google account app passwords</a> page.</li>
-            <li>If prompted, sign in to your google account.</li>
-            <li>At the bottom of the page, click select app and choose the app you are using, or select other to type a custom name (e.g., "Social Media Assistant").</li>
-            <li>Click create. A 16-digit app password will appear on the screen. Copy it.</li>
+            <li>Go to your <a href="https://myaccount.google.com/apppasswords" target="_blank">Google Account App Passwords</a> page.</li>
+            <li>If prompted, sign in to your Google account.</li>
+            <li>At the bottom of the page, click "Select app" and choose the app you are using, or select "Other" to type a custom name (e.g., "Social Media Assistant").</li>
+            <li>Click "Create". A 16-digit app password will appear on the screen. Copy it.</li>
         </ol>
     </div>
 </div>
@@ -291,7 +291,7 @@
         const topic = document.getElementById('topic').value;
 
         // Stable Gemini 1.5 Flash endpoint
-        const url = `https://googleapis.com{apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         // Properly formatted payload schema for the Gemini API
         const payload = {
@@ -303,7 +303,7 @@
         };
 
         try {
-            // Mixed-content security parameters to help bypass browser proxy drops
+            // HTTPS-only fetch request for secure GitHub Pages deployment
             const response = await fetch(url, {
                 method: 'POST',
                 mode: 'cors',
@@ -328,11 +328,8 @@
                 // Set keyword fallback identifiers for safe visual generation
                 const keyword = encodeURIComponent(topic.split(" ").slice(0, 2).join(","));
                 
-                // High-quality social fallback graphic
-                generatedImageUrl = "https://unsplash.com";
-                if(keyword) {
-                    generatedImageUrl = `https://unsplash.com{keyword}`;
-                }
+                // High-quality social media image from Unsplash
+                generatedImageUrl = `https://source.unsplash.com/800x600/?${keyword}`;
 
                 // Render components out to the webpage GUI blocks
                 document.getElementById('postContent').innerText = generatedText;
@@ -345,7 +342,7 @@
             }
         } catch (error) {
             console.error("Caught Fetch Exception Event:", error);
-            alert(`Network Request Blocked!\n\nReason: Your browser blocked the link between HTTP (your web host) and HTTPS (Google's servers).\n\nCRITICAL FIX: Access your page using the secure link wrapper instead:\nhttps://atwebpages.com`);
+            alert(`Network Request Error!\n\nReason: ${error.message}\n\nMake sure your Gemini API key is valid and you are accessing this page over HTTPS.`);
         } finally {
             generateBtn.innerText = "Generate Social Media Post";
             generateBtn.disabled = false;
