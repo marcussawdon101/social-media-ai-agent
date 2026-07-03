@@ -7,14 +7,16 @@
     <!-- External Stylesheet -->
     <link rel="stylesheet" href="style.css">
     <!-- EmailJS Library for client-side transmission -->
-    <script src="https://jsdelivr.net"></script>
+    <script src="https://jsdelivr.net" defer></script>
+    <!-- External JavaScript Architecture Link - Placed with defer attribute -->
+    <script src="script.js" defer></script>
 </head>
 <body>
 
 <div class="container">
     <header>
         <h1>AI Social Media Assistant</h1>
-        <button class="btn btn-secondary" onclick="toggleModal(true)">ℹ️ API & Setup Info</button>
+        <button class="btn btn-secondary" id="infoBtn">ℹ️ API & Setup Info</button>
     </header>
 
     <!-- Configuration & Input Form -->
@@ -69,7 +71,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h2>API & Email Setup Information</h2>
-            <button class="close-modal" onclick="toggleModal(false)">&times;</button>
+            <button class="close-modal" id="closeModalBtn">&times;</button>
         </div>
         
         <h3>API Information</h3>
@@ -100,7 +102,5 @@
     </div>
 </div>
 
-<!-- External JavaScript Architecture Link -->
-<script src="script.js"></script>
 </body>
 </html>
