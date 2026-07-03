@@ -1,15 +1,15 @@
 let generatedText = "";
 let generatedImageUrl = "";
 
-// Bind initial execution listeners on window creation
-window.onload = function() {
+// Using DOMContentLoaded to bind events immediately when HTML structure is ready
+document.addEventListener("DOMContentLoaded", function() {
     // Automatically retrieve and load historical form parameters safely
     if(localStorage.getItem("apiKey")) document.getElementById("apiKey").value = localStorage.getItem("apiKey");
     if(localStorage.getItem("gmailUser")) document.getElementById("gmailUser").value = localStorage.getItem("gmailUser");
     if(localStorage.getItem("appPassword")) document.getElementById("appPassword").value = localStorage.getItem("appPassword");
     if(localStorage.getItem("recipient")) document.getElementById("recipient").value = localStorage.getItem("recipient");
 
-    // Modal Event Bindings (FIXES THE UNRESPONSIVE BUTTON)
+    // Modal Event Bindings
     const infoBtn = document.getElementById("infoBtn");
     const closeModalBtn = document.getElementById("closeModalBtn");
     
@@ -20,7 +20,7 @@ window.onload = function() {
     document.getElementById("assistantForm").addEventListener("submit", generatePost);
     document.getElementById("sendEmailBtn").addEventListener("click", sendGeneratedEmail);
     document.getElementById("discardBtn").addEventListener("click", resetForm);
-}
+});
 
 // Toggle Setup Information Modal overlay
 function toggleModal(show) {
